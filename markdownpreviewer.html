@@ -1,0 +1,30 @@
+<html lang="en">
+    <head>
+        <title>Markdown Previewer in Angular 1</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js" /></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+    </head>
+
+    <body>
+        <div ng-app="markdownPreviewer">
+            <div ng-controller="markdownController">
+                <textarea data-ng-model="text"></textarea>
+                <p data-ng-bind-html="html(text)"></p>
+            </div>
+        </div>
+        <script>
+            'use strict';
+
+            var markdownApp = angular.module('markdownPreviewer', []);
+
+            markdownApp.controller('markdownController', ['$scope', '$sce', ($scope, $sce) => {
+                $scope.text = "# Markdown ``` editor ``` \n `tell me more` \n * Peanut Butter \n * Capicolla  \n * Bologna \n ## More? \n ### Store";
+
+                $scope.html = (text) => {
+                    var mark = marked(text);
+                    return $sce.trustAsHtml(mark);
+                }
+            }]);
+        </script>
+    </body>
+</html>
