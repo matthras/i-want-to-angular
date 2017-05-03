@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+    body {
+        background-color: ivory;
+    }
+
+    table {
+        margin: 0;
+        text-align:center;
+        border-collapse: collapse;
+    }
+
+    thead td {
+        font-weight: bold;
+    }
+
+    table tr td{
+        border: 1px solid black;
+    }
+
+    td {
+        padding: 1em;
+    }
+
+    img {
+        height: 5em;
+        border: 1px solid black;
+    }
+
+    #alltime {
+        display: none;
+    }   
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js" /></script>
+</head>
+<body ng-app="CamperLeaderboard">
+    <div class="main" ng-controller="MainController">
+        <h1>FreeCodeCamp Camper Leaderboard</h1>
+        <button ng-click="buttonFunc()">Sort by {{ sortby }}</button>
+        <table>
+            <thead>
+                <td>Username</td>
+                <td>Avatar</td>
+                <td><span ng-click="recentFunc()">Recent</span></td>
+                <td><span ng-click="alltimeFunc()">All Time</span></td>
+            </thead>
+            <tbody id="recent">
+            <tr ng-repeat="camper in recent">
+                <td>{{ camper.username }}</td>
+                <td><img ng-src="{{ camper.img }}"></td>
+                <td>{{ camper.recent }}</td>
+                <td>{{ camper.alltime }}</td>
+            </tr>
+            </tbody>
+            <tbody id="alltime">
+            <tr ng-repeat="camper in alltime">
+                <td>{{ camper.username }}</td>
+                <td><img ng-src="{{ camper.img }}"></td>
+                <td>{{ camper.recent }}</td>
+                <td>{{ camper.alltime }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        'use strict'; 
+        // Modules
+        var app = angular.module('CamperLeaderboard', []);
+        // Controllers
+        app.controller('MainController', ['$scope', 'campers', 
+            function($scope, campers) {
+                campers.then(function(data) {
+                    $scope.recent = data[0]['data'];
+                    $scope.alltime = data[1]['data'];
+                    $scope.recentFunc = function() {
+                        document.getElementById("recent").style.display = 'table-row-group';
+                        document.getElementById("alltime").style.display = 'none';
+                    }
+                    $scope.alltimeFunc = function() {
+                        document.getElementById("recent").style.display = 'none';
+                        document.getElementById("alltime").style.display = 'table-row-group';
+                    }
+                    $scope.sortby = 'All Time';
+                    $scope.buttonFunc = function() {
+                        if($scope.sortby === 'All Time') {
+                            $scope.sortby = 'Recent';
+                            $scope.alltimeFunc();
+                        } else {
+                            $scope.sortby = 'All Time';
+                            $scope.recentFunc();
+                        }
+                    }
+                });
+            }
+        ]);
+        // Services
+        app.factory('campers', ['$http', '$q', function($http, $q) {
+            var recent = $http.get('https://fcctop100.herokuapp.com/api/fccusers/top/recent'),
+                alltime = $http.get('https://fcctop100.herokuapp.com/api/fccusers/top/alltime')
+            return $q.all([recent,alltime]).then(function(results) {
+                console.log(results);
+                return results;
+            })
+        }])
+
+    </script>
+</body>
+
+
+</html>
