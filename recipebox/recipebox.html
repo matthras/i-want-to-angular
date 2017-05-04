@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js" /></script>
+    <script src="ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body ng-app="RecipeBox">
+    <div id="main" ng-controller="MainController">
+        <uib-accordion>
+            <div uib-accordion-group class="panel-default" heading="Derp" ng-repeat="recipe in recipeList">
+                {{ recipe.title }}
+            </div>
+        </uib-accordion>
+    </div>
+
+
+    <script>
+        'use strict';
+        // Modules
+        var app = angular.module('RecipeBox', ['ui.bootstrap']);
+
+        // Controllers
+        app.controller('MainController', ['$scope',
+            function($scope) {
+                $scope.recipeList = [
+                    {
+                        id: 0,
+                        title: 'Derp Pie'
+                    },
+                    {
+                        id: 1,
+                        title: 'Herp Pie'
+                    }
+                ]
+            }
+        ])
+
+    </script>
+
+</body>
